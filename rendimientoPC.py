@@ -1,23 +1,20 @@
+import socket
 import psutil
-import speedtest
 
-#Rendimiento del CPU
-cpu_percent = psutil.cpu_percent()
+def main():
+    host = "200.12.169.186" # Cambia esta línea con la dirección IP de tu computador
+    port = 80 # Cambia este valor con el puerto que deseas utilizar
 
-print(f"Porcentaje de uso del CPU: {cpu_percent}%")
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
 
-#Rendimiento de la memoria
-memory = psutil.virtual_memory()
-memory_available = memory.available
-memory_used = memory.used
+    # Obtiene el porcentaje de uso del CPU
+    cpu_percent = psutil.cpu_percent()
 
-print(f"Memoria disponible: {memory_available / 1024 / 1024:.2f} MB")
-print(f"Memoria en uso: {memory_used / 1024 / 1024:.2f} MB")
+    # Envía el porcentaje de uso del CPU al otro computador
+    s.sendall(str(cpu_percent).encode())
 
-#Rendimiento de la red
-speedInternet = speedtest.Speedtest()
-download_speed = speedInternet.download()
-upload_speed = speedInternet.upload()
+    s.close()
 
-print("Velocidad de descarga: {:.2f} Mbps".format(download_speed / 1e6))
-print("Velocidad de subida: {:.2f} Mbps".format(upload_speed / 1e6))
+if __name__ == "__main__":
+    main()
